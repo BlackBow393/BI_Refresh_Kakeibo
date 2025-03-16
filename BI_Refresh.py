@@ -1,6 +1,6 @@
 import os
 import time
-from pywinauto import Application, keyboard
+from pywinauto import Application
 
 def main():
     exe = 'PBIDesktop.exe'
@@ -23,10 +23,12 @@ def main():
         win.set_focus()
 
         # ホーム＞更新をクリック
-        win.ホーム.wait('visible')
+        #win.ホーム.wait('visible',timeout = 1)
+        time.sleep(0.5)
         win.ホーム.click_input()
         
-        win.更新.wait('visible')
+        time.sleep(0.5)
+        #win.更新.wait('visible',timeout = 3)
         win.更新.click_input()
 
          # 「キャンセル」という文字が消えるまで待機
@@ -47,15 +49,13 @@ def main():
                 print("最新の情報に更新が表示されているため待機中...")
                 time.sleep(1)  # 1秒間待ってから再確認
 
-            print("最新の情報に更新が消えました")
+            print("更新完了")
 
         except Exception as e:
             print("最新の情報に更新が消えるのを待つ中にエラーが発生:", e)
 
-        print("更新完了")
-
         # 「保存」オプションが表示されるまで待つ
-        win.保存.wait('visible', timeout=10)  # 「保存」オプションが表示されるまで待機
+        time.sleep(0.5)
 
         # 「保存」をクリック
         win.保存.click_input()
