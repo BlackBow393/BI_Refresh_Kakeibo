@@ -29,21 +29,33 @@ def main():
         win.更新.wait('visible')
         win.更新.click_input()
 
-        # キャンセルボタンが非表示になるのを待つ（最大15秒）
+         # 「キャンセル」という文字が消えるまで待機
         try:
-            # キャンセルボタンが別ウィンドウに表示されている場合、他のウィンドウを探す
-            cancel_win = app.window(title_re='最新の情報に更新')  # 例: キャンセルウィンドウを探す
-            cancel_win.wait('visible')
-            print("更新画面を発見")
-            
-            
+            # ウィンドウ内のテキストを探索（「最新の情報に更新」があるかどうか）
+            while True:
+                # 「最新の情報に更新」テキストが見つかれば
+                cancel_text_found = False
+                for control in win.descendants():  # 子要素のテキストを検索
+                    if control.window_text() == "最新の情報に更新":
+                        cancel_text_found = True
+                        break
+                
+                if not cancel_text_found:
+                    break  # 「最新の情報に更新」が見つからなければループを抜ける
+
+                # 「キャンセル」テキストが見つかった場合、少し待機して再チェック
+                print("最新の情報に更新が表示されているため待機中...")
+                time.sleep(1)  # 1秒間待ってから再確認
+
+            print("最新の情報に更新が消えました")
+
         except Exception as e:
-            print("キャンセルボタンが表示されませんでした", e)
+            print("最新の情報に更新が消えるのを待つ中にエラーが発生:", e)
 
         print("更新完了")
 
         # 「保存」オプションが表示されるまで待つ
-        win.保存.wait('visible')  # 「保存」オプションが表示されるまで待機
+        win.保存.wait('visible', timeout=10)  # 「保存」オプションが表示されるまで待機
 
         # 「保存」をクリック
         win.保存.click_input()
